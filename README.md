@@ -58,3 +58,16 @@ Playlist URLs should be in the format of a share link like the following:
 `https://open.spotify.com/playlist/37i9dQZF1DX2S9rTKTX6JP?si=dNmprcd1Qt6DePO606aOHA`
 
 You can obtain these by clicking "Share" > "Copy Playlist Link" on a Spotify playlist.
+
+## Playing via Zoom
+
+The concept for this orginated during the COVID-19 pandemic when social distancing was key. As such
+people were encouraged to stay at home and public spaces were closed meaning music bingo couldn't be
+played at the local pub.
+
+Instead I sought to find a way to play it via video conference and therefore it only seems right to
+include instructions for playing via [Zoom](https://zoom.us/).
+
+On the host computer, sign in to Zoom, start a meeting, Click "Share Screen" at the bottom and then
+select the "Advanced" tab and choose the "Music or Computer Sound Only" option. All other participants
+need to join the Zoom meeting as per any other Zoom meeting.
