@@ -49,7 +49,7 @@ will stop itself.
 
 # Notes
 
-# Playlist URLs
+## Playlist URLs
 
 Playlist URLs should be in the format of a share link like the following:
 `https://open.spotify.com/playlist/37i9dQZF1DX2S9rTKTX6JP?si=dNmprcd1Qt6DePO606aOHA`
