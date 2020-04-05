@@ -8,11 +8,19 @@ bingo.
 1. Clone this repository
 2. pip install -r requirements.txt
 
+# Prerequisites
+
+1. You'll need a Spotify Premium account.
+2. You need to create a Spotify application [here](https://developer.spotify.com/dashboard/applications)
+and obtain its `Client ID` and `Client Secret`.
+
 # Usage
 
 ## Generate Bingo Cards
 
 `scripts/bingo.sh generate-cards --playlist <playlist_url> --cards 5`
+
+See below for the playlist URL required.
 
 ## Start a New Game
 
@@ -38,3 +46,12 @@ When you exit a game the `--game-id` and `--starting-track` will be output so yo
 
 Nothing fancy exit at any time with `ctrl+c` or wait until all the tracks have played and the game
 will stop itself.
+
+# Notes
+
+# Playlist URLs
+
+Playlist URLs should be in the format of a share link like the following:
+`https://open.spotify.com/playlist/37i9dQZF1DX2S9rTKTX6JP?si=dNmprcd1Qt6DePO606aOHA`
+
+You can obtain these by clicking "Share" > "Copy Playlist Link" on a Spotify playlist.
