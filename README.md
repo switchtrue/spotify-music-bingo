@@ -7,6 +7,8 @@ Check out the [sample](sample-cards) Bingo cards.
 
 # Installation
 
+*Note: A [virtualenv](https://virtualenv.pypa.io/) is recommended.*
+
 1. Clone this repository
 2. pip install -r requirements.txt
 
@@ -15,6 +17,8 @@ Check out the [sample](sample-cards) Bingo cards.
 1. You'll need a Spotify Premium account.
 2. You need to create a Spotify application [here](https://developer.spotify.com/dashboard/applications)
 and obtain its `Client ID` and `Client Secret`.
+3. The environment variables `SPOTIPY_CLIENT_ID` and `SPOTIPY_CLIENT_SECRET` will need to be set
+when using all of the commands below.
 
 # Usage
 
