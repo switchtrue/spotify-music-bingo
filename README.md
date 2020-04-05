@@ -3,6 +3,8 @@
 Generate bing cards from a Spotify playlist and then play short clips of each song to play music
 bingo.
 
+Check out the [sample](samples) Bingo cards.
+
 # Installation
 
 1. Clone this repository

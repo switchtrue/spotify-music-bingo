@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # spotify-music-bingo
-*.png
+/*.png
 .cache-*
