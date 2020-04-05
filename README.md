@@ -24,10 +24,13 @@ See below for the playlist URL required.
 
 ## Start a New Game
 
-`scripts/bingo.sh play-game --playlist <playlist_url> [--clip-duration <seconds>] [--verbose]`
+`scripts/bingo.sh play-game --playlist <playlist_url> [--clip-duration <seconds>] [--duration-between-clips <seconds>] [--verbose]`
 
 `--clip-duration` is optional and controls how much of the beginning of the track is played. The
 default is 30 seconds.
+
+`--duration-between-clips` is optional and allows a silent gap to be played between each clip to
+better identify the start/end of a song. The default is 2 seconds.
 
 `--verbose` will log each track after it has played.
 
@@ -38,7 +41,7 @@ The order of the tracks played is randomised when a game is started. However, yo
 game id is displayed and can be passed back in with a starting track number to carry on where you
 left off.
 
-`scripts/bingo.sh play-game --playlist <playlist_url> --game-id <game_id> --starting-track <track_number> [--clip-duration <seconds>]`
+`scripts/bingo.sh play-game --playlist <playlist_url> --game-id <game_id> --starting-track <track_number> [--clip-duration <seconds>] [--duration-between-clips <seconds>]`
 
 When you exit a game the `--game-id` and `--starting-track` will be output so you can resume later.
 

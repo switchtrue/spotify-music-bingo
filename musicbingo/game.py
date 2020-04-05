@@ -3,10 +3,11 @@ import random
 
 
 class MusicBingo:
-    def __init__(self, playlist, device_id, clip_duration, game_id, starting_track=0, logger=None):
+    def __init__(self, playlist, device_id, clip_duration, duration_between_tracks, game_id, starting_track=0, logger=None):
         self.playlist = playlist
         self.device_id = device_id
         self.clip_duration = clip_duration
+        self.duration_between_tracks = duration_between_tracks
         self.game_id = game_id
         if not game_id:
             self.game_id = str(random.randint(0, 1000000))
@@ -40,14 +41,22 @@ class MusicBingo:
             uri = track['uri']
 
             self.playlist.play(self.device_id, uri)
-            self._loop.call_later(self.clip_duration, self.next_track)
+
+            if self.duration_between_tracks > 0:
+                 self._loop.call_later(self.duration_between_tracks, self.pause_track)
+                 self._loop.call_later(self.clip_duration + self.duration_between_tracks, self.next_track)
+            else:
+                self._loop.call_later(self.clip_duration, self.next_track)
 
             self.current_track = self.current_track + 1
         except:
             self.stop()
             raise
 
-    def stop(self):
+    def pause_track(self):
         self.playlist.pause(self.device_id)
+
+    def stop(self):
+        self.pause_track()
         self._loop.stop()
 

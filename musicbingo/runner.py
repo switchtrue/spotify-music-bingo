@@ -43,9 +43,10 @@ def generate_cards(playlist, cards):
 @click.option('--playlist', help='The Spotify playlist URL to use.')
 @click.option('--game-id', default=None, help='A game ID to resume playing')
 @click.option('--clip-duration', default=30, help='How long should the song clip play for?')
+@click.option('--duration-between-clips', default=5, help='The number of seconds of slience between clips')
 @click.option('--starting-track', default=0, help='The track number to start from. Useful with --game-id for resuming a game.')
 @click.option('--verbose', '-v', is_flag=True, help='Whether or not to display the tracks once they have been played.')
-def play_game(playlist, game_id, clip_duration, starting_track, verbose):
+def play_game(playlist, game_id, clip_duration, duration_between_clips, starting_track, verbose):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -69,7 +70,7 @@ def play_game(playlist, game_id, clip_duration, starting_track, verbose):
     if verbose:
         logger = ClickLogger()
 
-    game = MusicBingo(bingo_playlist, device_id, clip_duration, game_id, starting_track, logger)
+    game = MusicBingo(bingo_playlist, device_id, clip_duration, duration_between_clips, game_id, starting_track, logger)
     click.secho(
         "To resume this game with the tracks in the same order pass the flag --game-id {}".format(game.game_id),
         fg='green')
