@@ -42,6 +42,7 @@ class MusicBingoCard:
         playlist_title_y = BINGO_TITLE_Y + PLAYLIST_TITLE_Y + bingo_title_size[1]
         d.text((playlist_title_x, playlist_title_y), self.playlist.name(), font=fnt, fill=(0, 0, 0))
 
+        # Add each of the bingo squares
         cells = self.tracks
         cells.insert(12, None)
         y1 = BOARD_Y
@@ -75,6 +76,11 @@ class MusicBingoCard:
                 space_x = x1 + (CELL_WIDTH / 2) - (space_size[0] / 2)
                 space_y = y1 + (CELL_HEIGHT / 2)
                 d.text((space_x, space_y), 'Space', font=free_space_fnt, fill=(0, 0, 0))
+
+        # Add a watermark footer link
+        fnt = ImageFont.truetype('Arial Unicode.ttf', 16)
+        footer_y = BOARD_Y + (CELL_HEIGHT*6) + 5
+        d.text((560, footer_y), 'https://github.com/switchtrue/spotify-music-bingo', font=fnt, fill=(100, 100, 100))
 
         img.save(self.get_filename())
 
