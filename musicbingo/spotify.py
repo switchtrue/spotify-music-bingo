@@ -2,7 +2,7 @@ import random
 import re
 
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 
 PLAYLIST_ID_RE = re.compile(r"https:\/\/open\.spotify\.com\/playlist\/([A-Za-z0-9]*).*")
 
@@ -11,11 +11,14 @@ class PlaylistDoesNotExist(Exception):
 
 
 class SpotifyBingoPlaylist:
-    def __init__(self, playlist_url, random_seed=None):
+    def __init__(self, playlist_url):
         self.url = playlist_url
         self.id_ = self._get_playlist_id(playlist_url)
-        self.spotify_client = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials)
-        self.random_seed = random_seed
+
+        scope = "user-read-playback-state,user-modify-playback-state"
+        auth = SpotifyOAuth(username='mleonard87', redirect_uri='http://localhost', scope=scope)
+
+        self.spotify_client = spotipy.Spotify(client_credentials_manager=auth)
 
         self._playlist = None
         self._tracks = None
@@ -64,11 +67,11 @@ class SpotifyBingoPlaylist:
 
         return self._tracks
 
-    def tracks(self):
+    def tracks(self, random_seed=None):
         api_tracks = self._fetch_tracks()
 
-        if self.random_seed:
-            random.seed(self.random_seed)
+        if random_seed:
+            random.seed(random_seed)
             random.shuffle(api_tracks)
 
         tracks = []
@@ -77,6 +80,7 @@ class SpotifyBingoPlaylist:
             tracks.append({
                 'name': track['name'],
                 'artists': ', '.join([artist['name'] for artist in track['artists']]),
+                'uri': track['uri'],
             })
 
         return tracks
@@ -86,3 +90,12 @@ class SpotifyBingoPlaylist:
 
     def __str__(self):
         return str(self.data)
+
+    def devices(self):
+        return self.spotify_client.devices()['devices']
+
+    def play(self, device_id, uri):
+        self.spotify_client.start_playback(device_id=device_id, uris=[uri])
+
+    def pause(self, device_id):
+        self.spotify_client.pause_playback(device_id=device_id)
