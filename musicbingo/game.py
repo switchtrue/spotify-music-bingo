@@ -38,10 +38,10 @@ class MusicBingo:
     def next_track(self):
         try:
             # Note the -1's below because we want to log the previously played track
-            if self.logger and self.current_track > 0:
+            if self.current_track > 0:
                 track_info = self.tracks[self.current_track-1]
-                self.logger.log('Played {} of {}: {} - {}'.format(
-                    self.current_track, len(self.tracks), track_info['name'], track_info['artists']))
+                self.logger.log_track(self.current_track, len(self.tracks),
+                    track_info['name'], track_info['artists'])
 
             if self.current_track >= len(self.tracks):
                 self.stop()

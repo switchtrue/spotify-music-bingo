@@ -4,16 +4,10 @@ from .constants import DEFAULT_TRACK_COUNT, DEFAULT_CLIP_DURATION, DEFAULT_DURAT
 from .spotify import SpotifyBingoPlaylist, PlaylistDoesNotExist
 from .card import MusicBingoCard
 from .game import MusicBingo
-from .utils import generate_play_game_command
+from .utils import generate_play_game_command, ClickLogger
 
 import random
 import time
-
-
-class ClickLogger:
-    @staticmethod
-    def log(message):
-        click.echo(message)
 
 
 @click.group()
@@ -25,8 +19,8 @@ def cli():
 @click.option('--game-id', default=None, help='A game ID to resume playing')
 @click.option('--cards', default=1, help='Number of bingo cards to make.')
 @click.option('--track-count', default=DEFAULT_TRACK_COUNT, help='The number of tracks to use from the playlist.')
-@click.option('--verbose', '-v', is_flag=True, help='Whether or not to output additional logging.')
-def generate_cards(playlist, game_id, cards, track_count, verbose):
+@click.option('--debug', is_flag=True, default=False, help='Whether or not to output additional logging.')
+def generate_cards(playlist, game_id, cards, track_count, debug):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -39,9 +33,7 @@ def generate_cards(playlist, game_id, cards, track_count, verbose):
             "ERROR: Playlist is too short. Must have at least 24 tracks.", fg='red')
         return 1
 
-    logger = None
-    if verbose:
-        logger = ClickLogger()
+    logger = ClickLogger(debug)
 
     game = MusicBingo(bingo_playlist, game_id, track_count, logger=logger)
 
@@ -59,8 +51,8 @@ def generate_cards(playlist, game_id, cards, track_count, verbose):
 @click.option('--duration-between-clips', default=DEFAULT_DURATION_BETWEEN_CLIPS, help='The number of seconds of slience between clips')
 @click.option('--starting-track', default=0, help='The track number to start from. Useful with --game-id for resuming a game.')
 @click.option('--track-count', default=DEFAULT_TRACK_COUNT, help='The number of tracks to use from the playlist.')
-@click.option('--verbose', '-v', is_flag=True, help='Whether or not to output additional logging.')
-def play_game(playlist, game_id, clip_duration, duration_between_clips, starting_track, track_count, verbose):
+@click.option('--debug', is_flag=True, default=False, help='Whether or not to output additional logging.')
+def play_game(playlist, game_id, clip_duration, duration_between_clips, starting_track, track_count, debug):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -80,9 +72,7 @@ def play_game(playlist, game_id, clip_duration, duration_between_clips, starting
     else:
         device_id = devices[0]['id']
 
-    logger = None
-    if verbose:
-        logger = ClickLogger()
+    logger = ClickLogger(debug)
 
     click.secho("Using playlist {} with {} tracks.".format(bingo_playlist.name(), len(bingo_playlist.tracks())))
 
@@ -96,7 +86,7 @@ def play_game(playlist, game_id, clip_duration, duration_between_clips, starting
         game.start()
     except KeyboardInterrupt:
         game.stop()
-        click.secho("To resume this game where you left off:\n")
+        click.secho("\nTo resume this game where you left off:\n")
         click.secho(
             generate_play_game_command(playlist, game_id, track_count, game.current_track - 1), # minus 1 because we already advanced it
             fg="green")
