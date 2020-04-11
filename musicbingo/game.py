@@ -26,9 +26,16 @@ class MusicBingo:
 
         self.end_status = None
 
-    def generate_bingo_cards(self, cards):
-        for i in range(cards):
-            card = MusicBingoCard(self.playlist.name(), self.tracks, i+1)
+    def generate_bingo_cards(self, players):
+        try:
+            player_count = int(players)
+            cards = range(1, player_count+1)
+        except ValueError:
+            # Can't cast to an int so we will treat players as a CSV list of player names
+            cards = players.split(',')
+
+        for i in cards:
+            card = MusicBingoCard(self.playlist.name(), self.tracks, i, self.game_id)
             card.write()
 
     def start(self):

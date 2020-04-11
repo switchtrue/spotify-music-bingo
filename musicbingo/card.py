@@ -5,15 +5,16 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 class MusicBingoCard:
-    def __init__(self, title, playlist_tracks, card_number):
+    def __init__(self, title, playlist_tracks, player, game_id):
         self.title = title
         self.tracks = random.sample(playlist_tracks, 24)
-        self.card_number = card_number
+        self.player = player
+        self.game_id = game_id
 
     def get_filename(self):
         name = slugify(self.title)
-        num = str(self.card_number).zfill(3)
-        return '{}_{}.png'.format(name, num)
+        player = str(self.player).zfill(3)
+        return '{}_{}_{}.png'.format(self.game_id, name, player)
 
     def write(self):
         WIDTH = 1000

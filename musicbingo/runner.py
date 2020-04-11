@@ -17,10 +17,10 @@ def cli():
 @click.command()
 @click.option('--playlist', help='The Spotify playlist URL to use.')
 @click.option('--game-id', default=None, help='A game ID to resume playing')
-@click.option('--cards', default=1, help='Number of bingo cards to make.')
+@click.option('--players', default="1", help='Number of bingo cards to make or a CSV list of player names.')
 @click.option('--track-count', default=DEFAULT_TRACK_COUNT, help='The number of tracks to use from the playlist.')
 @click.option('--debug', is_flag=True, default=False, help='Whether or not to output additional logging.')
-def generate_cards(playlist, game_id, cards, track_count, debug):
+def generate_cards(playlist, game_id, players, track_count, debug):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -41,7 +41,7 @@ def generate_cards(playlist, game_id, cards, track_count, debug):
     click.secho(generate_play_game_command(playlist, game.game_id, track_count), fg="green")
     click.secho("\n")
 
-    game.generate_bingo_cards(cards)
+    game.generate_bingo_cards(players)
 
 
 @click.command()
