@@ -54,7 +54,7 @@ class MusicBingo:
             self.playlist.play(self.device_id, uri)
 
             if self.duration_between_tracks > 0:
-                 self._loop.call_later(self.duration_between_tracks, self.pause_track)
+                 self._loop.call_later(self.clip_duration, self.pause_track)
                  self._loop.call_later(self.clip_duration + self.duration_between_tracks, self.next_track)
             else:
                 self._loop.call_later(self.clip_duration, self.next_track)
