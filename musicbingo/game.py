@@ -1,24 +1,35 @@
 import asyncio
 import random
 
+from .card import MusicBingoCard
+
 
 class MusicBingo:
-    def __init__(self, playlist, device_id, clip_duration, duration_between_tracks, game_id, starting_track=0, logger=None):
+    def __init__(self, playlist, game_id, track_count, device_id=None, clip_duration=None, duration_between_tracks=None, starting_track=0, logger=None):
         self.playlist = playlist
-        self.device_id = device_id
-        self.clip_duration = clip_duration
-        self.duration_between_tracks = duration_between_tracks
         self.game_id = game_id
         if not game_id:
             self.game_id = str(random.randint(0, 1000000))
+        self.device_id = device_id
+        self.clip_duration = clip_duration
+        self.duration_between_tracks = duration_between_tracks
         self.current_track = starting_track
         self.logger = logger
 
-        self.tracks = self.playlist.tracks(random_seed=self.game_id)
+        self.tracks = self.playlist.tracks(random_seed=self.game_id)[:track_count]
+
+        if self.logger:
+            for idx, track in enumerate(self.tracks):
+                self.logger.log("{}: {} - {}".format(idx, track['name'], track['artists']))
 
         self._loop = asyncio.get_event_loop()
 
         self.end_status = None
+
+    def generate_bingo_cards(self, cards):
+        for i in range(cards):
+            card = MusicBingoCard(self.playlist.name(), self.tracks, i+1)
+            card.write()
 
     def start(self):
         self.next_track()

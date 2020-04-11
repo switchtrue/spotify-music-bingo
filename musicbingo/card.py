@@ -1,16 +1,18 @@
+import random
+
 from slugify import slugify
 from PIL import Image, ImageDraw, ImageFont
 
 
 class MusicBingoCard:
-    def __init__(self, playlist, id_):
-        self.id_ = id_
-        self.playlist = playlist
-        self.tracks = playlist.get_card_tracks()
+    def __init__(self, title, playlist_tracks, card_number):
+        self.title = title
+        self.tracks = random.sample(playlist_tracks, 24)
+        self.card_number = card_number
 
     def get_filename(self):
-        name = slugify(self.playlist.name())
-        num = str(self.id_).zfill(3)
+        name = slugify(self.title)
+        num = str(self.card_number).zfill(3)
         return '{}_{}.png'.format(name, num)
 
     def write(self):
@@ -37,10 +39,10 @@ class MusicBingoCard:
 
         # Playlist Title
         fnt = ImageFont.truetype('Arial Unicode.ttf', 40)
-        playlist_title_size = d.textsize(self.playlist.name(), font=fnt)
+        playlist_title_size = d.textsize(self.title, font=fnt)
         playlist_title_x = (WIDTH / 2) - (playlist_title_size[0] / 2)
         playlist_title_y = BINGO_TITLE_Y + PLAYLIST_TITLE_Y + bingo_title_size[1]
-        d.text((playlist_title_x, playlist_title_y), self.playlist.name(), font=fnt, fill=(0, 0, 0))
+        d.text((playlist_title_x, playlist_title_y), self.title, font=fnt, fill=(0, 0, 0))
 
         # Add each of the bingo squares
         cells = self.tracks

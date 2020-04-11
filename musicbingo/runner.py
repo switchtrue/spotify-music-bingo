@@ -1,8 +1,10 @@
 import click
 
+from .constants import DEFAULT_TRACK_COUNT, DEFAULT_CLIP_DURATION, DEFAULT_DURATION_BETWEEN_CLIPS
 from .spotify import SpotifyBingoPlaylist, PlaylistDoesNotExist
 from .card import MusicBingoCard
 from .game import MusicBingo
+from .utils import generate_play_game_command
 
 import random
 import time
@@ -20,8 +22,11 @@ def cli():
 
 @click.command()
 @click.option('--playlist', help='The Spotify playlist URL to use.')
+@click.option('--game-id', default=None, help='A game ID to resume playing')
 @click.option('--cards', default=1, help='Number of bingo cards to make.')
-def generate_cards(playlist, cards):
+@click.option('--track-count', default=DEFAULT_TRACK_COUNT, help='The number of tracks to use from the playlist.')
+@click.option('--verbose', '-v', is_flag=True, help='Whether or not to output additional logging.')
+def generate_cards(playlist, game_id, cards, track_count, verbose):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -34,19 +39,28 @@ def generate_cards(playlist, cards):
             "ERROR: Playlist is too short. Must have at least 24 tracks.", fg='red')
         return 1
 
-    for i in range(cards):
-        card = MusicBingoCard(bingo_playlist, i+1)
-        card.write()
+    logger = None
+    if verbose:
+        logger = ClickLogger()
+
+    game = MusicBingo(bingo_playlist, game_id, track_count, logger=logger)
+
+    click.secho("To play this game with the same tracks in the same order:\n")
+    click.secho(generate_play_game_command(playlist, game.game_id, track_count), fg="green")
+    click.secho("\n")
+
+    game.generate_bingo_cards(cards)
 
 
 @click.command()
 @click.option('--playlist', help='The Spotify playlist URL to use.')
 @click.option('--game-id', default=None, help='A game ID to resume playing')
-@click.option('--clip-duration', default=30, help='How long should the song clip play for?')
-@click.option('--duration-between-clips', default=5, help='The number of seconds of slience between clips')
+@click.option('--clip-duration', default=DEFAULT_CLIP_DURATION, help='How long should the song clip play for?')
+@click.option('--duration-between-clips', default=DEFAULT_DURATION_BETWEEN_CLIPS, help='The number of seconds of slience between clips')
 @click.option('--starting-track', default=0, help='The track number to start from. Useful with --game-id for resuming a game.')
-@click.option('--verbose', '-v', is_flag=True, help='Whether or not to display the tracks once they have been played.')
-def play_game(playlist, game_id, clip_duration, duration_between_clips, starting_track, verbose):
+@click.option('--track-count', default=DEFAULT_TRACK_COUNT, help='The number of tracks to use from the playlist.')
+@click.option('--verbose', '-v', is_flag=True, help='Whether or not to output additional logging.')
+def play_game(playlist, game_id, clip_duration, duration_between_clips, starting_track, track_count, verbose):
     try:
         bingo_playlist = SpotifyBingoPlaylist(playlist)
     except PlaylistDoesNotExist:
@@ -70,19 +84,23 @@ def play_game(playlist, game_id, clip_duration, duration_between_clips, starting
     if verbose:
         logger = ClickLogger()
 
-    game = MusicBingo(bingo_playlist, device_id, clip_duration, duration_between_clips, game_id, starting_track, logger)
-    click.secho(
-        "To resume this game with the tracks in the same order pass the flag --game-id {}".format(game.game_id),
-        fg='green')
+    click.secho("Using playlist {} with {} tracks.".format(bingo_playlist.name(), len(bingo_playlist.tracks())))
+
+    game = MusicBingo(bingo_playlist, game_id, track_count, device_id, clip_duration, duration_between_clips, starting_track, logger)
+
+    click.secho("To play this game with the same tracks in the same order:\n")
+    click.secho(generate_play_game_command(playlist, game_id, track_count), fg="green")
+    click.secho("\n")
 
     try:
         game.start()
     except KeyboardInterrupt:
         game.stop()
+        click.secho("To resume this game where you left off:\n")
         click.secho(
-            "To resume the game where you left off run with --game-id {} --starting-track {}".format(game.game_id, game.current_track - 1),  # minus 1 because we already advanced it
-            fg='green'
-        )
+            generate_play_game_command(playlist, game_id, track_count, game.current_track - 1), # minus 1 because we already advanced it
+            fg="green")
+        click.secho("\n")
 
     if game.end_status == 'PLAYLIST_COMPLETE':
         click.secho(

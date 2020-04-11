@@ -71,8 +71,8 @@ class SpotifyBingoPlaylist:
         api_tracks = self._fetch_tracks()
 
         if random_seed:
-            random.seed(random_seed)
-            random.shuffle(api_tracks)
+            track_random = random.Random(random_seed)
+            track_random.shuffle(api_tracks)
 
         tracks = []
         for item in api_tracks:
@@ -85,9 +85,6 @@ class SpotifyBingoPlaylist:
 
         return tracks
 
-    def get_card_tracks(self):
-        return random.sample(self.tracks(), 24)
-
     def __str__(self):
         return str(self.data)
 
@@ -98,4 +95,12 @@ class SpotifyBingoPlaylist:
         self.spotify_client.start_playback(device_id=device_id, uris=[uri])
 
     def pause(self, device_id):
-        self.spotify_client.pause_playback(device_id=device_id)
+        try:
+            self.spotify_client.pause_playback(device_id=device_id)
+        except spotipy.SpotifyException as ex:
+            if ex.http_status == 403:
+                # Couldn't be paused. Usually means that its already been paused outside of
+                # spotify-music-bingo which is just fine!.
+                pass
+            else:
+                raise
