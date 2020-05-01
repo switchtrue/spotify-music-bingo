@@ -22,6 +22,7 @@ class MusicBingoCard:
 
         BINGO_TITLE_Y = 30
         PLAYLIST_TITLE_Y = 20
+        PLAYER_NAME_Y = 40
 
         CELL_WIDTH = 160
         CELL_HEIGHT = CELL_WIDTH
@@ -29,7 +30,7 @@ class MusicBingoCard:
         BOARD_X = 100
         BOARD_Y = 130
 
-        img = Image.new('RGB', (WIDTH, HEIGHT), color=(240, 240, 240))
+        img = Image.new('RGB', (WIDTH, HEIGHT), color=(255, 255, 255))
         d = ImageDraw.Draw(img)
 
         # BINGO Title
@@ -44,6 +45,14 @@ class MusicBingoCard:
         playlist_title_x = (WIDTH / 2) - (playlist_title_size[0] / 2)
         playlist_title_y = BINGO_TITLE_Y + PLAYLIST_TITLE_Y + bingo_title_size[1]
         d.text((playlist_title_x, playlist_title_y), self.title, font=fnt, fill=(0, 0, 0))
+
+        # Player Name
+        player_name = self.player.title()
+        fnt = ImageFont.truetype('Arial Unicode.ttf', 30)
+        player_name_size = d.textsize(player_name, font=fnt)
+        player_name_x = (WIDTH / 2) - (player_name_size[0] / 2)
+        player_name_y = BINGO_TITLE_Y + PLAYLIST_TITLE_Y + PLAYER_NAME_Y + bingo_title_size[1]
+        d.text((player_name_x, player_name_y), player_name, font=fnt, fill=(0, 0, 0))
 
         # Add each of the bingo squares
         cells = self.tracks

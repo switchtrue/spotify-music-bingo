@@ -1,0 +1,5 @@
+80s:
+scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/2yLdmiOxCoUXN48Aas6f4q\?si\=eMMNuws4R2iOmgFzdpyLPA" --game-id=5134
+
+Random:
+scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/4u8akxJvN0hlWdDPeWBarr\?si\=hh3c5buCQrGQhWxRDtWWfg" --game-id=639287
