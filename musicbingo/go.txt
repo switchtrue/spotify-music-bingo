@@ -1,5 +1,5 @@
-80s:
-scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/2yLdmiOxCoUXN48Aas6f4q\?si\=eMMNuws4R2iOmgFzdpyLPA" --game-id=5134
+90s:
+scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/3RUIJXK0srICFrjojmBHoW\?si\=Exfson1fRouBX4k6S5ordg" --game-id=302079
 
-Random:
-scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/4u8akxJvN0hlWdDPeWBarr\?si\=hh3c5buCQrGQhWxRDtWWfg" --game-id=639287
+00s:
+scripts/bingo.sh play-game --playlist="https://open.spotify.com/playlist/7q24EBz8HtUNq8lnTBJDOf\?si\=DnT5wiJ_RGeNGq6o0BcZGA" --game-id=441955
